@@ -1,8 +1,11 @@
-AWS Auto Scaling Nginx Web Server Architecture
+# AWS Auto Scaling Nginx Web Server Architecture
 
 A scalable, fault-tolerant, and cost-efficient web server deployment on AWS using EC2 instances in private subnets behind an Application Load Balancer (ALB) in public subnets. Integrated an Auto Scaling Group (ASG) with CloudWatch alarms to dynamically scale based on CPU utilization. Configured Nginx on Ubuntu and automated provisioning using EC2 user data.
 
-📌 Architecture Overview
+---
+
+
+##📌 Architecture Overview
 VPC with public/private subnets across 2 AZs
 
 Nginx EC2 instances in private subnets
@@ -15,7 +18,10 @@ Bastion host for secure SSH access
 
 NAT Gateway for outbound internet access
 
-🛠️ Technologies Used
+---
+
+
+##🛠️ Technologies Used
 AWS EC2
 
 Auto Scaling Group
@@ -30,7 +36,10 @@ Nginx on Ubuntu
 
 User Data scripting
 
-🧱 Step-by-Step Setup
+---
+
+
+##🧱 Step-by-Step Setup
 1️⃣ VPC & Subnets
 VPC CIDR: 10.0.0.0/16
 
@@ -157,7 +166,10 @@ sudo apt install stress -y
 stress --cpu 2 --timeout 300
 Observe CloudWatch triggering scale-out policy
 
-🧪 Troubleshooting Example: ALB Showing 502 Bad Gateway
+---
+
+
+##🧪 Troubleshooting Example: ALB Showing 502 Bad Gateway
 Problem:
 ALB returned 502 Bad Gateway and EC2 targets appeared unhealthy
 
@@ -186,7 +198,10 @@ Re-deployed EC2 via ASG with fixed script
 
 ALB health checks passed, and Nginx welcome page loaded successfully
 
-✅ Outcome
+---
+
+
+##✅ Outcome
 Achieved automated horizontal scaling using CPU metrics
 
 Ensured high availability across two AZs
