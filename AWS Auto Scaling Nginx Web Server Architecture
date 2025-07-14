@@ -5,7 +5,7 @@ A scalable, fault-tolerant, and cost-efficient web server deployment on AWS usin
 ---
 
 
-##📌 Architecture Overview
+## 📌 Architecture Overview
 VPC with public/private subnets across 2 AZs
 
 Nginx EC2 instances in private subnets
@@ -21,7 +21,7 @@ NAT Gateway for outbound internet access
 ---
 
 
-##🛠️ Technologies Used
+## 🛠️ Technologies Used
 AWS EC2
 
 Auto Scaling Group
@@ -39,7 +39,7 @@ User Data scripting
 ---
 
 
-##🧱 Step-by-Step Setup
+## 🧱 Step-by-Step Setup
 1️⃣ VPC & Subnets
 VPC CIDR: 10.0.0.0/16
 
@@ -169,7 +169,7 @@ Observe CloudWatch triggering scale-out policy
 ---
 
 
-##🧪 Troubleshooting Example: ALB Showing 502 Bad Gateway
+## 🧪 Troubleshooting Example: ALB Showing 502 Bad Gateway
 Problem:
 ALB returned 502 Bad Gateway and EC2 targets appeared unhealthy
 
@@ -201,7 +201,7 @@ ALB health checks passed, and Nginx welcome page loaded successfully
 ---
 
 
-##✅ Outcome
+## ✅ Outcome
 Achieved automated horizontal scaling using CPU metrics
 
 Ensured high availability across two AZs
