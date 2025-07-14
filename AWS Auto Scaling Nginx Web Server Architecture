@@ -1,6 +1,8 @@
 # AWS Auto Scaling Nginx Web Server Architecture
 
-A scalable, fault-tolerant, and cost-efficient web server deployment on AWS using EC2 instances in private subnets behind an Application Load Balancer (ALB) in public subnets. Integrated an Auto Scaling Group (ASG) with CloudWatch alarms to dynamically scale based on CPU utilization. Configured Nginx on Ubuntu and automated provisioning using EC2 user data.
+A scalable, fault-tolerant, and cost-efficient web server deployment on AWS using EC2 instances in private subnets behind an Application Load Balancer (ALB) 
+in public subnets. Integrated an Auto Scaling Group (ASG) with CloudWatch alarms to dynamically scale based on CPU utilization. Configured Nginx on Ubuntu 
+and automated provisioning using EC2 user data.
 
 ---
 
