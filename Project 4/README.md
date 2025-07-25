@@ -81,8 +81,6 @@ sudo systemctl start codedeploy-agent
 sudo systemctl enable codedeploy-agent
 
 
-
-
 ## 4. Create the GitHub repository
 
       - Click create new repository
