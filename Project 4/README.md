@@ -22,7 +22,7 @@
 
 ## 2. IAM Roles
       
-      ### Role for EC2 (EC2CodeDeployRole)
+      Role for EC2 (EC2CodeDeployRole)
             Click create role
             Trusted entity: EC2
             Permissions:
@@ -33,7 +33,7 @@
       This role will be attached to both EC2 instances
 
 
-      ### Role for CodeDeploy (CodeDeployServiceRole)
+      Role for CodeDeploy (CodeDeployServiceRole)
             Trusted entity: CodeDeploy
             permissions:
                   - AWSCodeDeployRole
@@ -44,7 +44,7 @@
 
 ## 3. Launch two EC2 instances (dev & Prod)
       
-     ### - The Dev Instance
+     - The Dev Instance
             launch an instance using Ubuntu
             name: nginx-dev-EC2
             subnet: nginx-publicsubnet
@@ -52,7 +52,7 @@
             Add a tag: Env=dev
             IAM Role: Attach the EC2CodeDeployRole that was created earlier
 
-     ### - Prod Instance
+     - Prod Instance
             - Same steps as dev instance, except;
                   Name = nginx-prod-instance
                   Tag = Env=prod
@@ -60,7 +60,7 @@
 
      ## SSH onto each instance and run these commands
       
-     ### - Install Nginx
+     - Install Nginx
 
       sudo apt update
       sudo apt install nginx -y
@@ -68,7 +68,7 @@
       sudo systemctl enable nginx
 
       
-     ### - Install CodeDeploy
+     - Install CodeDeploy
       
       sudo apt update -y
       sudo apt install ruby-full wget -y
@@ -101,17 +101,17 @@
 ## 5. Upload files to the main and dev branch
 
 
-            ### Dev branch
+            Dev branch
                   
                   - Click add files
                   - Upload your index.html, appspec.yml, and the folder scripts/ with install_nginx.sh
                   - In the index.html, you can add a heading like "<h1>Development Environment</h1>"
                   - Click commit changes
 
-            ### Main branch
+            Main branch
                   
                   - Switch back to the main branch from the dropdown
-                  - Upload the same files (index.html, appspec.yml, and the folder scripts/ with 		install_nginx.sh
+                  - Upload the same files (index.html, appspec.yml, and the folder scripts/ with install_nginx.sh
                   - But this time, change the content in the index.html to "<h1>Production Environment</h1>"
                   - Click commit changes
 
@@ -127,7 +127,7 @@
 	- For each application, create a deployment group:
 	- Assign a descriptive name, e.g., nginx-prod-deploy-group and nginx-dev-deploy-group.
 	- Select the Service Role: use the CodeDeployServiceRole you created earlier.
-	- Choose the EC2 instances by tags: filter by Env=prod for production group and Env=dev for 		  development group.
+	- Choose the EC2 instances by tags: filter by Env=prod for production group and Env=dev for development group.
 	- Set deployment settings (deployment type: In-place)
 
 
@@ -136,9 +136,9 @@
 	- Create two pipelines: one for production and one for development
 	- For each pipeline:
 
-		Source stage: connect your GitHub repo and select the appropriate branch (main for 			production, dev for development)
+		Source stage: connect your GitHub repo and select the appropriate branch (main for production, dev for development)
 		
-		Deploy stage: Use AWS CodeDeploy and select the corresponding application and deployment 		group
+		Deploy stage: Use AWS CodeDeploy and select the corresponding application and deployment group
 
 	- You can skip the other stages and create pipeline
 
