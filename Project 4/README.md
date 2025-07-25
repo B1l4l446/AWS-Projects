@@ -1,83 +1,85 @@
 # 🚀 AWS CI/CD Pipeline with GitHub – Dev & Prod Environments
 
-## 1. VPC and Networking
+A fully automated CI/CD pipeline using AWS CodeDeploy, EC2, CodePipeline, and GitHub. This project deploys different environments (dev and prod) using separate branches, showcasing DevOps skills in automation, infrastructure, and continuous delivery.
 
-      - Create a VPC
-            Name: nginx-VPC
-            IPv4 CIDR: 10.0.0.0/16
-      - Create a public subnet
-            Name: nginx-publicsubnet
-            CIDR block: 10.0.1.0/24
-      - Create an Internet Gateway and attach it to the VPC (name: MyIGW)
-      - Create a Route Table
-            Name: nginx-publicRT
-            Add route 0.0.0.0/0 ==> Target: MyIGW
-            Associate this Route Table with the public subnet (nginx-publicsubnet)
-      - Create a security group for EC2
-            Name: EC2-SG
-            Inbound rules:
-                  SSH (22) => My IP
-                  HTTP (80) => 0.0.0.0/0
+---
 
+## 1. 🌐 VPC and Networking
 
-## 2. IAM Roles
-      
-      Role for EC2 (EC2CodeDeployRole)
-            Click create role
-            Trusted entity: EC2
-            Permissions:
-                  - AmazonEC2RoleforAWSCodeDeploy
-                  - AmazonS3ReadOnlyAccess
-            Name = EC2CodeDeployRole
+- **Create a VPC**
+  - Name: `nginx-VPC`
+  - IPv4 CIDR: `10.0.0.0/16`
+  
+- **Create a Public Subnet**
+  - Name: `nginx-publicsubnet`
+  - CIDR Block: `10.0.1.0/24`
+  
+- **Internet Gateway**
+  - Create and attach to VPC
+  - Name: `MyIGW`
 
-      This role will be attached to both EC2 instances
+- **Route Table**
+  - Name: `nginx-publicRT`
+  - Route: `0.0.0.0/0` → Target: `MyIGW`
+  - Associate with public subnet
 
+- **Security Group (EC2-SG)**
+  - Inbound rules:
+    - SSH (22) → My IP
+    - HTTP (80) → `0.0.0.0/0`
 
-      Role for CodeDeploy (CodeDeployServiceRole)
-            Trusted entity: CodeDeploy
-            permissions:
-                  - AWSCodeDeployRole
-            Name =      CodeDeployServiceRole
+---
 
+## 2. 🔐 IAM Roles
 
+### EC2 Role: `EC2CodeDeployRole`
+- Trusted entity: EC2
+- Permissions:
+  - `AmazonEC2RoleforAWSCodeDeploy`
+  - `AmazonS3ReadOnlyAccess`
+- Attach this role to **both EC2 instances**
 
+### CodeDeploy Role: `CodeDeployServiceRole`
+- Trusted entity: CodeDeploy
+- Permissions:
+  - `AWSCodeDeployRole`
 
-## 3. Launch two EC2 instances (dev & Prod)
-      
-     - The Dev Instance
-            launch an instance using Ubuntu
-            name: nginx-dev-EC2
-            subnet: nginx-publicsubnet
-            security group: EC2-SG
-            Add a tag: Env=dev
-            IAM Role: Attach the EC2CodeDeployRole that was created earlier
+---
 
-     - Prod Instance
-            - Same steps as dev instance, except;
-                  Name = nginx-prod-instance
-                  Tag = Env=prod
+## 3. 💻 Launch EC2 Instances
 
+### Dev Instance
+- Name: `nginx-dev-EC2`
+- Subnet: `nginx-publicsubnet`
+- Security Group: `EC2-SG`
+- IAM Role: `EC2CodeDeployRole`
+- Tag: `Env=dev`
 
-     ## SSH onto each instance and run these commands
-      
-     - Install Nginx
+### Prod Instance
+- Name: `nginx-prod-EC2`
+- Subnet: `nginx-publicsubnet`
+- Tag: `Env=prod`
+- Same config as dev
 
-      sudo apt update
-      sudo apt install nginx -y
-      sudo systemctl start nginx
-      sudo systemctl enable nginx
+### SSH into each EC2 instance and run:
 
-      
-     - Install CodeDeploy
-      
-      sudo apt update -y
-      sudo apt install ruby-full wget -y
-      cd /home/ubuntu
-      wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
-      chmod +x install
-      sudo ./install auto
-      sudo systemctl start codedeploy-agent
-      sudo systemctl enable codedeploy-agent
+```bash
+# Install Nginx
+sudo apt update
+sudo apt install nginx -y
+sudo systemctl start nginx
+sudo systemctl enable nginx
+
+# Install CodeDeploy Agent
+sudo apt update -y
+sudo apt install ruby-full wget -y
+cd /home/ubuntu
+wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
+chmod +x install
+sudo ./install auto
+sudo systemctl start codedeploy-agent
+sudo systemctl enable codedeploy-agent
+
 
 
 
