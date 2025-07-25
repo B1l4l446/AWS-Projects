@@ -81,88 +81,115 @@ sudo systemctl start codedeploy-agent
 sudo systemctl enable codedeploy-agent
 
 
-## 4. Create the GitHub repository
+---
 
-      - Click create new repository
-      - name = nginx-cicd
-      - visibility: I chose private
+## 4. 📦 Create the GitHub Repository
 
-      Create the Main and Dev branches
+- Go to GitHub and create a new repository:
+  - Name: `nginx-cicd`
+  - Visibility: Private (or Public if showcasing)
 
-      GitHub should have created the main branch by default
-      
-      To create the dev branch;
-            - click the branch dropdown that says "main"
-            - in the input field, type "dev"
-            - Click "Create branch: dev from 'main'
-            - Should now have 2 branches; main and dev
+### Create the `main` and `dev` Branches
 
+- GitHub creates the `main` branch by default.
+- To create the `dev` branch:
+  - Click the branch dropdown that says "main"
+  - In the input field, type `dev`
+  - Click **"Create branch: dev from 'main'"**
+- You should now have two branches: `main` and `dev`
 
-## 5. Upload files to the main and dev branch
+---
 
+## 5. 📁 Upload Files to GitHub
 
-            Dev branch
-                  
-                  - Click add files
-                  - Upload your index.html, appspec.yml, and the folder scripts/ with install_nginx.sh
-                  - In the index.html, you can add a heading like "<h1>Development Environment</h1>"
-                  - Click commit changes
+### Dev Branch
+- Switch to the `dev` branch
+- Upload:
+  - `index.html` – with `<h1>Development Environment</h1>`
+  - `appspec.yml`
+  - `scripts/install_nginx.sh`
+- Click **Commit Changes**
 
-            Main branch
-                  
-                  - Switch back to the main branch from the dropdown
-                  - Upload the same files (index.html, appspec.yml, and the folder scripts/ with install_nginx.sh
-                  - But this time, change the content in the index.html to "<h1>Production Environment</h1>"
-                  - Click commit changes
+### Main Branch
+- Switch back to the `main` branch
+- Upload the **same files**, but modify:
+  - `index.html` – with `<h1>Production Environment</h1>`
+- Click **Commit Changes**
 
+---
 
-## 6. Configure AWS CodeDeploy Applications and Deployment Groups
+## 6. 🚀 Configure AWS CodeDeploy Applications & Deployment Groups
 
-	- In the AWS Console, navigate to CodeDeploy.
-	- Create two applications:
+- Navigate to **AWS Console → CodeDeploy**
+- Create two applications:
+  - `nginx-app-dev`
+  - `nginx-app-prod`
 
-		nginx-app-prod (for production)
-		nginx-app-dev (for development)
+### For Each Application:
+- Create a **Deployment Group**:
+  - Example names:
+    - Dev: `nginx-dev-deploy-group`
+    - Prod: `nginx-prod-deploy-group`
+  - Select the **Service Role**: `CodeDeployServiceRole`
+  - Select EC2 instances **by tag**:
+    - Dev: `Env=dev`
+    - Prod: `Env=prod`
+  - Deployment type: **In-place**
 
-	- For each application, create a deployment group:
-	- Assign a descriptive name, e.g., nginx-prod-deploy-group and nginx-dev-deploy-group.
-	- Select the Service Role: use the CodeDeployServiceRole you created earlier.
-	- Choose the EC2 instances by tags: filter by Env=prod for production group and Env=dev for development group.
-	- Set deployment settings (deployment type: In-place)
+---
 
+## 7. 🔁 Configure AWS CodePipeline (CI/CD)
 
-## 7. Set Up AWS CodePipeline for Automated CI/CD
+Create two pipelines: one for development, one for production.
 
-	- Create two pipelines: one for production and one for development
-	- For each pipeline:
+### For Each Pipeline:
+- **Source Stage**:
+  - Provider: GitHub
+  - Repo: `nginx-cicd`
+  - Branch:
+    - Dev Pipeline: `dev`
+    - Prod Pipeline: `main`
 
-		Source stage: connect your GitHub repo and select the appropriate branch (main for production, dev for development)
-		
-		Deploy stage: Use AWS CodeDeploy and select the corresponding application and deployment group
+- **Deploy Stage**:
+  - Provider: AWS CodeDeploy
+  - Application Name:
+    - Dev: `nginx-app-dev`
+    - Prod: `nginx-app-prod`
+  - Deployment Group:
+    - Dev: `nginx-dev-deploy-group`
+    - Prod: `nginx-prod-deploy-group`
 
-	- You can skip the other stages and create pipeline
+- Skip Build stage (unless using CodeBuild)
+- Click **Create pipeline**
 
+---
 
-## 8. Deploy and Verify
+## 8. ✅ Deploy and Verify
 
-	- Push code changes to your dev branch → CodePipeline triggers deployment to the dev EC2 instance.
-	- After testing, merge dev into main → triggers production deployment.
-	- Verify the deployment by accessing the public IP of each EC2 instance:
-	- Dev instance should display Development Environment page.
-	- Prod instance should display Production Environment page.	
+- Push code to the `dev` branch:
+  - Triggers deployment to **Dev EC2 instance**
+- After successful testing, merge `dev` into `main`:
+  - Triggers deployment to **Prod EC2 instance**
 
+### ✅ Verify the Result:
+- Access the **public IP** of each EC2 instance:
+  - Dev instance should show: **Development Environment**
+  - Prod instance should show: **Production Environment**
 
+---
 
-# Troubleshooting and fixes
+## 🛠️ Troubleshooting & Fixes
 
-	Deployment Scripts Not Running Correctly
-	Problem: CodeDeploy failed because the script install_nginx.sh didn’t execute.
+### ❌ Deployment Script Not Running
 
-	Cause: Script lacked execute permission.
+**Problem:**  
+Deployment failed because `install_nginx.sh` didn’t execute.
 
-	Fix:
+**Cause:**  
+The script was **not executable**.
 
-	bash
-	Copy
-	Edit
-	chmod +x scripts/install_nginx.sh
+**Fix:**  
+Make sure the script has execute permissions before pushing to GitHub:
+
+```bash
+chmod +x scripts/install_nginx.sh
